@@ -9536,18 +9536,11 @@ var ReactDOM = __webpack_require__(80);
 ReactDOM.render(
 //React.createElement('a',{href:'http://khoapham.vn'},'Khoa Pham')
 React.createElement(
-	"div",
-	null,
-	React.createElement(
-		"a",
-		{ href: "http://khoapham.vn" },
-		"Khoa Pham"
-	),
-	React.createElement(
-		"p",
-		null,
-		"Hoc lap trinh online mien phi"
-	)
+	"form",
+	{ method: "post", action: "/login" },
+	React.createElement("input", { type: "text", name: "username", placeholder: "UserName" }),
+	React.createElement("input", { type: "password", name: "password", placeholder: "Password" }),
+	React.createElement("input", { type: "submit", value: "Login" })
 ), document.getElementById('root'));
 
 /***/ }),
