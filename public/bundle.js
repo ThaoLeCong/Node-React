@@ -12284,7 +12284,12 @@ var Login = function (_React$Component) {
 				{ method: "post", action: "/login" },
 				_react2.default.createElement("input", { type: "text", name: "username", placeHolder: "UserName", autoComplete: "off" }),
 				_react2.default.createElement("input", { type: "password", name: "password", placeHolder: "Password", autoComplete: "off" }),
-				_react2.default.createElement("input", { type: "submit", value: "Login" })
+				_react2.default.createElement("input", { type: "submit", value: "Login" }),
+				_react2.default.createElement(
+					"a",
+					{ href: "/auth/facebook" },
+					"Login with Facebook"
+				)
 			);
 		}
 	}]);

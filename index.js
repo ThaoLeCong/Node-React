@@ -21,6 +21,7 @@ var pg=require("pg");
 var flash=require("connect-flash");
 const Passport=require("passport");
 const LocalStrategy = require('passport-local').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 app.use(session({
     secret: "thao1102",
     resave: true,
@@ -29,6 +30,8 @@ app.use(Passport.initialize());
 app.use(Passport.session());
 app.use(flash());
 const sequelize=require("sequelize");
+
+// cấu hình kết nối db vs sequelize
 const db = new sequelize( {
 	database:'DaihoianhhungDB',
 	username:'postgres',
@@ -46,6 +49,7 @@ const db = new sequelize( {
 		freezeTableName: true
 	}
 });
+// test kết nối
 db.authenticate()
 .then(() => {
 	console.log('Connection has been established successfully.');
@@ -53,6 +57,7 @@ db.authenticate()
 .catch(err => {
 	console.error('Unable to connect to the database:', err);
 });
+// create table
 const User = db.define('account', {
   	username: {
     	type: sequelize.STRING
@@ -87,6 +92,7 @@ app.post("/login",Passport.authenticate('local', { successRedirect: '/tintuc/1',
 app.get("/login",function(req,res){
 	res.render("login");
 });
+
 Passport.use(new LocalStrategy(
  	function(username, password, done) {
  		console.log("đang check");
@@ -114,3 +120,26 @@ Passport.deserializeUser(function (username, done) {
  		return done(null, user);
  		}); 
 });
+
+Passport.use(new FacebookStrategy({
+    clientID: 734280883409750,
+    clientSecret: '76ebf7f12ec59486f0a215c29662ce6a',
+    callbackURL: "http://localhost:3000/auth/facebook"
+  },
+  function(accessToken, refreshToken, profile, done) {
+  	console.log(profile.displayName);
+    User.findOrCreate({where:{username:profile.displayName,email:profile.email}}).spread((user, created) => {
+    	console.log(user.get({
+      		plain: true
+    	}));
+    	console.log(created);
+    	if(created)
+    	{
+    		done(null, user);
+    	}
+  	});
+  }
+));
+app.get('/auth/facebook',
+Passport.authenticate('facebook', { successRedirect: '/tintuc/1',
+                                      failureRedirect: '/' }));
